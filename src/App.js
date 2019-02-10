@@ -2,26 +2,19 @@ import React, { Component } from 'react';
 import { summonerApi, formUrl, matchApi } from './LeagueApi';
 import axios from 'axios';
 import Table from '@material-ui/core/Table';
-
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
-
-var runes = [];
-var spells = [];
-
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      name: '',    
-      matches: []      
-    };
+    this.state = { matches: [] };
     this.handleInput = this.handleInput.bind(this);
     this.getAccountId = this.getAccountId.bind(this);
 
+    this.summonerName = "";
     this.champions = this.loadChampion();
     this.items = this.loadItems();
     this.runes = this.loadRune();
@@ -69,23 +62,28 @@ class App extends Component {
   }
 
   handleInput(e) {
-    this.setState({name: e.target.value});
+    this.summonerName = e.target.value;
   }
 
   getAccountId(e) {
     this.setState({matches: []});
-    var self = this;
-    axios({
-      method:'get',
-      header:{
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-      },
-      url:formUrl(summonerApi.byName, self.state.name)
-    })
-      .then(function(response) {
+    if(this.summonerName){
+      var self = this;
+      axios({
+        method:'get',
+        header:{
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json'
+        },
+        url:formUrl(summonerApi.byName, self.summonerName)
+      })
+      .then( response => {
         self.getMatchList(response.data.accountId)
-    });
+      })
+      .catch( error => {
+        console.log(error);
+      });
+    }
     e.preventDefault();
   }
 
@@ -95,8 +93,8 @@ class App extends Component {
       method:'get',
       url:formUrl(matchApi.byAccountId, accountId)
     })
-      .then(function(response) {
-        self.matchRow(accountId, response.data.matches.slice(0, 10))
+    .then(response => {
+      self.matchRow(accountId, response.data.matches.slice(0, 10))
     });
   }
 
@@ -106,27 +104,27 @@ class App extends Component {
       method:'get',
       url:formUrl(matchApi.byMatchId, id)
     })
-      .then(function(response) {
-        var pid = self.getParticipantId(accountId, response.data.participantIdentities);
-        var participant = response.data.participants[pid-1];        
-        var details = {
-          matchId: id,
-          duration: response.data.gameDuration,
-          outcome: self.getMatchOutcome(participant.teamId, response.data),
-          summoner : self.state.name,
-          accountId : accountId,
-          championName : self.champions[participant.championId],
-          items: self.getItems(participant.stats),
-          runes: self.getRunes(participant.stats),
-          spells: [self.spells[participant.spell1Id], self.spells[participant.spell2Id]],
-          kDA : (participant.stats.kills + participant.stats.assists)/participant.stats.deaths,
-          cs: participant.stats.totalMinionsKilled,
-          cspm : participant.stats.totalMinionsKilled/response.data.gameDuration*60,
-          level : participant.stats.champLevel
-        };
-       let moreMatches = [...self.state.matches];
-       moreMatches.push(details);
-       self.setState({ matches: moreMatches });
+    .then( response => {
+      var pid = self.getParticipantId(accountId, response.data.participantIdentities);
+      var participant = response.data.participants[pid-1];        
+      var details = {
+        matchId: id,
+        duration: response.data.gameDuration,
+        outcome: self.getMatchOutcome(participant.teamId, response.data),
+        summoner : self.summonerName,
+        accountId : accountId,
+        championName : self.champions[participant.championId],
+        items: self.getItems(participant.stats),
+        runes: self.getRunes(participant.stats),
+        spells: [self.spells[participant.spell1Id], self.spells[participant.spell2Id]],
+        kDA : (participant.stats.kills + participant.stats.assists)/participant.stats.deaths,
+        cs: participant.stats.totalMinionsKilled,
+        cspm : participant.stats.totalMinionsKilled/response.data.gameDuration*60,
+        level : participant.stats.champLevel
+      };
+      let moreMatches = [...self.state.matches];
+      moreMatches.push(details);
+      self.setState({ matches: moreMatches });
     });
   }
 
@@ -150,7 +148,7 @@ class App extends Component {
   }
 
   getItems(data){
-    return [
+    var items = [
       this.items[data.item0],
       this.items[data.item1],
       this.items[data.item2],
@@ -159,10 +157,13 @@ class App extends Component {
       this.items[data.item5],
       this.items[data.item6],
     ]          
+    return items.filter(function(item){
+      return item !== undefined;
+    })
   }
 
   getRunes(data){
-    return [
+    var runes = [
       this.runes[data.perk0],
       this.runes[data.perk1],
       this.runes[data.perk2],
@@ -170,10 +171,9 @@ class App extends Component {
       this.runes[data.perk4],
       this.runes[data.perk5]
     ]
-  }
-
-  getSpells(ids){
-
+    return runes.filter(function(rune){
+      return rune !== undefined;
+    })
   }
 
   createTable(){

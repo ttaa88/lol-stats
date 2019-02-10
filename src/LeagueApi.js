@@ -1,6 +1,6 @@
 const apiConfig = {
     riotRoot: "https://na1.api.riotgames.com",    
-    apiKey: "RGAPI-ed5204ab-e2a3-4251-bb1b-e75fc55d79c8"
+    apiKey: "RGAPI-2ac7a890-071f-4d04-972c-ebad1e7355d8"
 }
 
 const summonerApi = {
