@@ -1,13 +1,13 @@
 {
   "main.css": "/lol-stats/static/css/main.b4454d8f.chunk.css",
-  "main.js": "/lol-stats/static/js/main.ca4aa1e2.chunk.js",
-  "main.js.map": "/lol-stats/static/js/main.ca4aa1e2.chunk.js.map",
+  "main.js": "/lol-stats/static/js/main.ad204602.chunk.js",
+  "main.js.map": "/lol-stats/static/js/main.ad204602.chunk.js.map",
   "static/js/1.c899eb9c.chunk.js": "/lol-stats/static/js/1.c899eb9c.chunk.js",
   "static/js/1.c899eb9c.chunk.js.map": "/lol-stats/static/js/1.c899eb9c.chunk.js.map",
   "runtime~main.js": "/lol-stats/static/js/runtime~main.c44eb024.js",
   "runtime~main.js.map": "/lol-stats/static/js/runtime~main.c44eb024.js.map",
   "static/css/main.b4454d8f.chunk.css.map": "/lol-stats/static/css/main.b4454d8f.chunk.css.map",
   "index.html": "/lol-stats/index.html",
-  "precache-manifest.366e67e43828f28f82f138e9f5654092.js": "/lol-stats/precache-manifest.366e67e43828f28f82f138e9f5654092.js",
+  "precache-manifest.68070e9e6116e7496c4c17cac42f5e13.js": "/lol-stats/precache-manifest.68070e9e6116e7496c4c17cac42f5e13.js",
   "service-worker.js": "/lol-stats/service-worker.js"
 }
