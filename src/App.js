@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { summonerApi, formUrl, matchApi } from './LeagueApi';
+//import { summonerApi, formUrl, matchApi } from './LeagueApi';
 import axios from 'axios';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -65,44 +65,57 @@ class App extends Component {
     this.summonerName = e.target.value;
   }
 
-  getAccountId(e) {
+  // getAccountId(e) {
+  //   this.setState({matches: []});
+  //   if(this.summonerName){
+  //     var self = this;
+  //     axios({
+  //       method:'get',
+  //       header:{
+  //         'Access-Control-Allow-Origin': '*',
+  //         'Content-Type': 'application/json'
+  //       },
+  //       url:formUrl(summonerApi.byName, self.summonerName)
+  //     })
+  //     .then( response => {
+  //       self.getMatchList(response.data.accountId)
+  //     })
+  //     .catch( error => {
+  //       console.log(error);
+  //     });
+  //   }
+  //   e.preventDefault();
+  // }
+  getAccountId(e){
     this.setState({matches: []});
     if(this.summonerName){
       var self = this;
-      axios({
-        method:'get',
-        header:{
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        },
-        url:formUrl(summonerApi.byName, self.summonerName)
+      axios.get(`/summer?name=${self.summonerName}`)
+      .then(function (response){
+        console.log(response.data)
       })
-      .then( response => {
-        self.getMatchList(response.data.accountId)
-      })
-      .catch( error => {
-        console.log(error);
-      });
+      .catch(function (error){
+        console.log(error)
+      })      
     }
-    e.preventDefault();
   }
 
   getMatchList(accountId) {
-    var self = this;
-    axios({
-      method:'get',
-      url:formUrl(matchApi.byAccountId, accountId)
-    })
-    .then(response => {
-      self.matchRow(accountId, response.data.matches.slice(0, 10))
-    });
+    // var self = this;
+    // axios({
+    //   method:'get',
+    //   url:formUrl(matchApi.byAccountId, accountId)
+    // })
+    // .then(response => {
+    //   self.matchRow(accountId, response.data.matches.slice(0, 10))
+    // });
   }
 
   getMatchDetails(accountId, id){
     var self = this;
     axios({
       method:'get',
-      url:formUrl(matchApi.byMatchId, id)
+      //url:formUrl(matchApi.byMatchId, id)
     })
     .then( response => {
       var pid = self.getParticipantId(accountId, response.data.participantIdentities);
